@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #c0392b;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #c0392b;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 12px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+
+        ol {
+            list-style: lower-alpha;
+            margin-left: 30px;
+        }
+
+        li {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        label:hover {
+            background-color: #fdecea;
+            color: #c0392b;
+        }
+
+        input[type="radio"] {
+            accent-color: #c0392b;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #c0392b;
+            padding: 10px;
+            cursor: pointer;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #49c02b;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Quiz Application</h1>
+
+        <form id="quizForm">
+
+            <div class="card">
+                <div class="question">1. What does HTML stand for?</div>
+                <ol>
+                    <li><label><input type="radio" name="q1" value="a"> Hyper Text Markup Language</label></li>
+                    <li><label><input type="radio" name="q1" value="b"> High Text Machine Language</label></li>
+                    <li><label><input type="radio" name="q1" value="c"> Hyperlinks Text Mark Language</label></li>
+                    <li><label><input type="radio" name="q1" value="d"> None of these</label></li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <div class="question">2. Which tag is used to create a hyperlink?</div>
+                <ol>
+                    <li><label><input type="radio" name="q2" value="a"> &lt;link&gt;</label></li>
+                    <li><label><input type="radio" name="q2" value="b"> &lt;a&gt;</label></li>
+                    <li><label><input type="radio" name="q2" value="c"> &lt;href&gt;</label></li>
+                    <li><label><input type="radio" name="q2" value="d"> &lt;url&gt;</label></li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <div class="question">3. Which CSS property is used to change text color?</div>
+                <ol>
+                    <li><label><input type="radio" name="q3" value="a"> bgcolor</label></li>
+                    <li><label><input type="radio" name="q3" value="b"> text-color</label></li>
+                    <li><label><input type="radio" name="q3" value="c"> color</label></li>
+                    <li><label><input type="radio" name="q3" value="d"> font-color</label></li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <div class="question">4. Which tag is used to include JavaScript in HTML?</div>
+                <ol>
+                    <li><label><input type="radio" name="q4" value="a"> &lt;js&gt;</label></li>
+                    <li><label><input type="radio" name="q4" value="b"> &lt;javascript&gt;</label></li>
+                    <li><label><input type="radio" name="q4" value="c"> &lt;script&gt;</label></li>
+                    <li><label><input type="radio" name="q4" value="d"> &lt;code&gt;</label></li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <div class="question">5. Which symbol is used for comments in CSS?</div>
+                <ol>
+                    <li><label><input type="radio" name="q5" value="a"> //</label></li>
+                    <li><label><input type="radio" name="q5" value="b"> &lt;!-- --&gt;</label></li>
+                    <li><label><input type="radio" name="q5" value="c"> /* */</label></li>
+                    <li><label><input type="radio" name="q5" value="d"> ##</label></li>
+                </ol>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="result">
+            <p style="color: #000000; font-weight: 900; font-size: 15px;">Result:</p>
+            <div style="color: #c0392b; font-style: italic;" id="result"></div>
+
+        </div>
+
+    </div>
+
+</body>
+<script>
+    const correctAns = {
+        q1: 'a',
+        q2: 'b',
+        q3: 'c',
+        q4: 'c',
+        q5: 'c'
+    };
+
+    const quizForm = document.getElementById('quizForm');
+    const result = document.getElementById('result');
+
+    quizForm.addEventListener('submit', function (e) {
+        e.preventDefault(); // stop page reload
+
+        let score = 0;
+
+        for (let key in correctAns) {
+            const selected = quizForm[key].value;
+            if (selected === correctAns[key]) {
+                score++;
+            }
+        }
+
+        result.innerHTML = `You scored ${score} out of 5`;
+    });
+</script>
+
+
+</html>

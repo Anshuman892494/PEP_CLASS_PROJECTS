@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Square Calculation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ff8d8d;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(170, 0, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .head {
+            color: #aa0000;
+            font-weight: bold;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #aa0000;
+            padding-bottom: 10px;
+        }
+
+        .main_cont {
+            background: #ffb3b3;
+            border-radius: 14px;
+            padding: 30px;
+            margin: 20px auto;
+            box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #totalBalance {
+            font-size: 22px;
+            font-weight: bold;
+            color: #7a0000;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            max-width: 250px;
+            height: 50px;
+            margin-top: 10px;
+            font-size: 22px;
+            border: 2px solid #00aa00;
+            border-radius: 8px;
+            text-align: center;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #008000;
+            background-color: #f0fff0;
+        }
+
+        button {
+            margin: 10px 5px 0;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p class="head">Bank Money Data</p>
+        <div class="main_cont">
+            <p id="totalBalance"></p>
+        </div>
+        <p class="">Enter Your Amount</p>
+
+        <input type="number" id="amount"><br><br>
+
+        <button style="background-color: green;" type="button" onclick="deposite()">Deposite</button>
+        <button style="background-color: red;" type="button" onclick="withdraw()">Withdraw</button>
+        <button style="background-color: yellow;" type="button" onclick="balance()">Balance</button>
+    </div>
+
+    <script>
+        var totalBalance = 0;
+
+        // Show initial balance
+        document.getElementById("totalBalance").innerHTML = "Total Balance: Rs. " + totalBalance;
+
+        function deposite() {
+            let dAmount = Number(document.getElementById("amount").value);
+
+            if (dAmount <= 0 || isNaN(dAmount)) {
+                alert("Please enter a valid deposit amount");
+                return;
+            }
+
+            totalBalance += dAmount;
+            updateUI();
+        }
+
+        function withdraw() {
+            let wAmount = Number(document.getElementById("amount").value);
+
+            if (wAmount <= 0 || isNaN(wAmount)) {
+                alert("Please enter a valid withdraw amount");
+                return;
+            }
+
+            if (wAmount > totalBalance) {
+                alert("Insufficient balance");
+                return;
+            }
+
+            totalBalance -= wAmount;
+            updateUI();
+        }
+
+        function balance() {
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById("totalBalance").innerHTML = "Total Balance: Rs. " + totalBalance;
+            document.getElementById("amount").value = "";
+        }
+    </script>
+
+</body>
+
+</html>
