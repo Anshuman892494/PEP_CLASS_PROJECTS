@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Power Calculation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #e0f8e0;
+            /* light green background */
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 128, 0, 0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .head {
+            color: #006400;
+            /* dark green */
+            font-weight: bold;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #008000;
+            /* medium green underline */
+            padding-bottom: 10px;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #004d00;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 120px;
+            /* bigger width for 2-column style */
+            height: 80px;
+            /* bigger height */
+            font-size: 24px;
+            border: 2px solid #00aa00;
+            border-radius: 8px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #008000;
+            background-color: #f0fff0;
+        }
+
+        /* Grid layout for outputs */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 2 columns */
+            gap: 20px;
+            justify-items: center;
+            margin-top: 20px;
+        }
+
+        .grid div {
+            text-align: center;
+        }
+
+        /* Optional: make input number field bigger than outputs */
+        #inputNumber {
+            width: 250px;
+            height: 60px;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p class="head">Number Power Calculation</p>
+        <p>Enter Number</p>
+        <input type="number" id="inputNumber" placeholder="Enter a number"><br>
+
+        <!-- Output grid -->
+        <div class="grid">
+            <div>
+                <p>Power 2 ( n<sup>2</sup> )</p>
+                <input type="number" id="square">
+            </div>
+            <div>
+                <p>Power 3 ( n<sup>3</sup> )</p>
+                <input type="number" id="cube">
+            </div>
+            <div>
+                <p>Power 4 ( n<sup>4</sup> )</p>
+                <input type="number" id="power4">
+            </div>
+            <div>
+                <p>Power 5 ( n<sup>5</sup> )</p>
+                <input type="number" id="power5">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputNumber = document.getElementById('inputNumber');
+        const squareInput = document.getElementById('square');
+        const cubeInput = document.getElementById('cube');
+        const power4Input = document.getElementById('power4');
+        const power5Input = document.getElementById('power5');
+
+        // Event listener for input change
+        inputNumber.addEventListener('input', function () {
+            const num = parseFloat(this.value);
+
+            if (isNaN(num)) {
+                squareInput.value = '';
+                cubeInput.value = '';
+                power4Input.value = '';
+                power5Input.value = '';
+            } else {
+                squareInput.value = num * num;
+                cubeInput.value = num * num * num;
+                power4Input.value = num * num * num * num;
+                power5Input.value = num * num * num * num * num;
+            }
+        });
+    </script>
+</body>
+
+</html>
