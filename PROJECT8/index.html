@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
+
     <style>
         * {
             margin: 0;
@@ -83,7 +84,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .task-left {
             font-size: 16px;
+        }
+
+        .task-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-time {
+            font-size: 12px;
+            color: #555;
         }
 
         .delete-btn {
@@ -93,6 +108,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            color: #fff;
         }
 
         .delete-btn:hover {
@@ -114,20 +130,18 @@
 </head>
 
 <body>
+
     <main class="container">
-        <header>
-            <h1>Task Manager</h1>
-        </header>
+        <h1>Task Manager</h1>
 
         <section class="input-section">
             <input type="text" id="taskInput" placeholder="Enter a task">
             <button id="addTaskBtn">Add</button>
         </section>
 
-        <section>
-            <div class="task-counter" id="taskCounter"></div>
-            <ul class="task-list" id="taskList"></ul>
-        </section>
+        <div class="task-counter" id="taskCounter"></div>
+
+        <ul class="task-list" id="taskList"></ul>
     </main>
 
     <script>
@@ -138,10 +152,13 @@
 
         let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-        const saveTasks = () => localStorage.setItem("tasks", JSON.stringify(tasks));
+        const saveTasks = () => {
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        };
 
         const renderTasks = () => {
             taskList.innerHTML = "";
+
             if (tasks.length === 0) {
                 taskCounter.textContent = "";
                 taskList.innerHTML = '<li class="no-tasks">No tasks yet. Add a task above!</li>';
@@ -153,8 +170,12 @@
             tasks.forEach((task, index) => {
                 const li = document.createElement("li");
 
-                const taskText = document.createElement("span");
-                taskText.textContent = task;
+                const left = document.createElement("div");
+                left.className = "task-left";
+                left.textContent = task.text;
+
+                const right = document.createElement("div");
+                right.className = "task-right";
 
                 const deleteBtn = document.createElement("button");
                 deleteBtn.textContent = "Delete";
@@ -165,8 +186,15 @@
                     renderTasks();
                 };
 
-                li.appendChild(taskText);
-                li.appendChild(deleteBtn);
+                const time = document.createElement("span");
+                time.className = "task-time";
+                time.textContent = task.time;
+
+                right.appendChild(deleteBtn);
+                right.appendChild(time);
+
+                li.appendChild(left);
+                li.appendChild(right);
                 taskList.appendChild(li);
             });
         };
@@ -178,12 +206,19 @@
                 return;
             }
 
-            if (tasks.includes(taskText)) {
+            if (tasks.some(task => task.text === taskText)) {
                 alert("Task already exists!");
                 return;
             }
 
-            tasks.push(taskText);
+            const now = new Date();
+            const dateTime = now.toLocaleString();
+
+            tasks.push({
+                text: taskText,
+                time: dateTime
+            });
+
             taskInput.value = "";
             saveTasks();
             renderTasks();
@@ -196,6 +231,7 @@
 
         renderTasks();
     </script>
+
 </body>
 
 </html>
