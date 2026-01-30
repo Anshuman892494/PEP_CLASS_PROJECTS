@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Smart User Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: #fff7f0;
+            color: #b91c1c;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #fca5a5;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #f87171;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 2px solid #fdba74;
+            background: #fff7f0;
+            color: #b91c1c;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #fb923c;
+            box-shadow: 0 0 8px rgba(251, 146, 60, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            background: #fb923c;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background: #f87171;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .row b {
+            color: #f87171;
+            background: rgba(251, 146, 60, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fdba74;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-right: 4px solid #f87171;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .actions button {
+            margin: 0;
+            padding: 8px 12px;
+            font-size: 11px;
+            width: auto;
+        }
+
+        .delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .edit {
+            background: #fb923c;
+            color: #000;
+        }
+
+        #sortBtn {
+            background: #fff7f0;
+            color: #f87171;
+            border: 1px solid #f87171;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Smart User Dashboard</h1>
+
+        <input type="text" id="search" placeholder="Search by name..." />
+
+        <div class="row">
+            <span>Total: <b id="totalUsers">0</b></span>
+            <span>.com Emails: <b id="comUsers">0</b></span>
+        </div>
+
+        <form id="userForm">
+            <input type="text" id="nameInput" placeholder="Enter name" required />
+            <input type="email" id="emailInput" placeholder="Enter email" required />
+            <button type="submit">Add / Update User</button>
+        </form>
+
+        <div class="row">
+            <button id="sortBtn">Sort by Name</button>
+        </div>
+
+        <ul id="userList"></ul>
+    </div>
+
+    <script>
+        const userList = document.getElementById("userList");
+        const searchInput = document.getElementById("search");
+        const totalUsersEl = document.getElementById("totalUsers");
+        const comUsersEl = document.getElementById("comUsers");
+        const userForm = document.getElementById("userForm");
+        const nameInput = document.getElementById("nameInput");
+        const emailInput = document.getElementById("emailInput");
+        const sortBtn = document.getElementById("sortBtn");
+
+        // Load users from localStorage or initialize as empty array
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let editId = null;
+
+        function renderUsers(list) {
+            userList.innerHTML = "";
+            list.forEach(user => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+        <span>${user.name} - ${user.email}</span>
+        <div class="actions">
+          <button class="edit">Edit</button>
+          <button class="delete">Delete</button>
+        </div>
+      `;
+                // Add delete functionality
+                li.querySelector(".delete").addEventListener("click", () => deleteUser(user.id));
+                // Add edit functionality
+                li.querySelector(".edit").addEventListener("click", () => editUser(user));
+                userList.appendChild(li);
+            });
+        }
+
+        // Counts total users and users with .com email addresses
+        function updateStats() {
+            totalUsersEl.textContent = users.length;
+            comUsersEl.textContent = users.filter(u => u.email.includes(".com")).length;
+        }
+
+        // Saves the current users array to localStorage
+        function saveToLocal() {
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+
+        // Form submission handler for adding or updating users
+        userForm.addEventListener("submit", e => {
+            e.preventDefault();
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            if (!name || !email) return;
+
+            // If editing existing user
+            if (editId) {
+                users = users.map(u => u.id === editId ? { ...u, name, email } : u);
+                editId = null;
+            } else {
+                // If adding new user with unique ID
+                users.push({ id: Date.now(), name, email });
+            }
+
+            // Clear form and update UI
+            userForm.reset();
+            saveToLocal();
+            renderUsers(users);
+            updateStats();
+        });
+
+        //  Deletes a user by ID and updates the display
+        function deleteUser(id) {
+            users = users.filter(user => user.id !== id);
+            saveToLocal();
+            renderUsers(users);
+            updateStats();
+        }
+
+        // Populates the form with user data for editing
+        function editUser(user) {
+            nameInput.value = user.name;
+            emailInput.value = user.email;
+            editId = user.id;
+        }
+
+        // Search functionality - filters users by name
+        searchInput.addEventListener("input", () => {
+            const value = searchInput.value.toLowerCase().trim();
+            renderUsers(users.filter(u => u.name.toLowerCase().includes(value)));
+        });
+
+        // Sort button - sorts users alphabetically by name
+        sortBtn.addEventListener("click", () => {
+            users.sort((a, b) => a.name.localeCompare(b.name));
+            saveToLocal();
+            renderUsers(users);
+        });
+
+        renderUsers(users);
+        updateStats();
+    </script>
+
+</body>
+
+</html>

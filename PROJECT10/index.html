@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Smart User Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: white;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #sortBtn {
+            background: #38bdf8;
+        }
+
+        form button {
+            background: #22c55e;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #334155;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Smart User Dashboard</h1>
+
+        <!-- Search -->
+        <input type="text" id="search" placeholder="Search by name..." />
+
+        <!-- Stats -->
+        <div class="stats">
+            <span>Total Users: <b id="totalUsers">0</b></span>
+            <span>(gmail) Emails: <b id="comUsers">0</b></span>
+        </div>
+
+        <!-- Add User -->
+        <form id="userForm">
+            <input type="text" id="nameInput" placeholder="Enter name" required />
+            <input type="email" id="emailInput" placeholder="Enter email" required />
+            <button type="submit">Add User</button>
+        </form>
+
+        <!-- Sort -->
+        <button id="sortBtn">Sort by Name</button>
+
+        <!-- User List -->
+        <ul id="userList"></ul>
+    </div>
+
+    <script>
+        // ---------------- DOM ELEMENTS ----------------
+        const userList = document.getElementById("userList");
+        const searchInput = document.getElementById("search");
+        const totalUsersEl = document.getElementById("totalUsers");
+        const comUsersEl = document.getElementById("comUsers");
+        const sortBtn = document.getElementById("sortBtn");
+        const userForm = document.getElementById("userForm");
+        const nameInput = document.getElementById("nameInput");
+        const emailInput = document.getElementById("emailInput");
+
+        let users = [];
+
+        // ---------------- PROMISE + ASYNC ----------------
+        async function fetchUsers() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve([
+                        { id: 1, name: "Anshu Kumar", email: "anshu@gmail.com" },
+                        { id: 2, name: "Ravi Sharma", email: "ravi@yahoo.com" },
+                        { id: 3, name: "Neha Singh", email: "neha@company.com" },
+                        { id: 4, name: "Amit Verma", email: "amit@gmail.com" },
+                        { id: 5, name: "Radha Rani", email: "radha@outlook.com" },
+                        { id: 6, name: "Utkarsh Yadav", email: "utkarsh@gmail.com" },
+                        { id: 7, name: "Sujeet Yadav", email: "sujeet@gmail.com" }
+                    ]);
+                }, 700);
+            });
+        }
+
+        // ---------------- RENDER USERS ----------------
+        function renderUsers(list) {
+            userList.innerHTML = "";
+
+            list.forEach(user => {
+                const li = document.createElement("li");
+                li.textContent = `${user.name} - ${user.email}`;
+                userList.appendChild(li);
+            });
+        }
+
+        // ---------------- STATS (ARRAY METHODS) ----------------
+        function updateStats() {
+            totalUsersEl.textContent = users.length;
+
+            const comUsers = users.filter(user =>
+                user.email.includes("gmail")
+            );
+
+            comUsersEl.textContent = comUsers.length;
+        }
+
+        // ---------------- SEARCH (STRING METHODS) ----------------
+        searchInput.addEventListener("input", () => {
+            const value = searchInput.value.toLowerCase().trim();
+
+            const filteredUsers = users.filter(user =>
+                user.name.toLowerCase().includes(value)
+            );
+
+            renderUsers(filteredUsers);
+        });
+
+        // ---------------- SORT ----------------
+        sortBtn.addEventListener("click", () => {
+            users.sort((a, b) => a.name.localeCompare(b.name));
+            renderUsers(users);
+        });
+
+        // ---------------- ADD USER METHOD ----------------
+        function addUser(name, email) {
+            const newUser = {
+                id: Math.floor(Math.random() * 10000),
+                name: name.trim(),
+                email: email.trim()
+            };
+
+            users.push(newUser);      // push()
+            renderUsers(users);
+            updateStats();
+        }
+
+        userForm.addEventListener("submit", function (e) {
+            e.preventDefault();       // preventDefault()
+
+            const name = nameInput.value;
+            const email = emailInput.value;
+
+            if (!name.trim() || !email.trim()) return;
+
+            addUser(name, email);
+            userForm.reset();         // reset()
+        });
+
+        // ---------------- INIT ----------------
+        async function init() {
+            users = await fetchUsers();
+            renderUsers(users);
+            updateStats();
+        }
+
+        init();
+    </script>
+
+</body>
+
+</html>

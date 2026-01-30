@@ -1,0 +1,106 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: url("https://img.freepik.com/premium-photo/beautiful-blue-sky-with-clouds-cloudy-sky-good-weather_193819-402.jpg");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.left-panel {
+    width: 40%;
+    background: linear-gradient(180deg, #ff512f, #f09819);
+    color: white;
+    padding: 25px;
+}
+
+.left-panel h1 {
+    margin-bottom: 20px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+.search-box button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    background: #fff;
+    color: #ff512f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    background: #ffe0d4;
+}
+
+.error {
+    margin-top: 10px;
+    color: #ffe0d4;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    margin-bottom: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.right-panel {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    text-align: center;
+}
+
+.card h2 {
+    font-size: 28px;
+    color: #ff512f;
+}
+
+.card p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.hidden {
+    display: none;
+}
